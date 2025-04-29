@@ -10,61 +10,22 @@ export default function Home() {
     const email = keycloak.tokenParsed?.email;
 
     return (
-        <div style={styles.container}>
-            <div style={styles.card}>
+        <div className="h-screen bg-gray-100 flex justify-end items-start p-8">
+            <div className="bg-white p-6 rounded-xl shadow-lg text-center min-w-[250px]">
                 <img
                     src={`https://api.dicebear.com/7.x/initials/svg?seed=${username}`}
                     alt="avatar"
-                    style={styles.avatar}
+                    className="w-20 h-20 rounded-full mb-4 mx-auto"
                 />
-                <h1 style={styles.heading}>Welcome, {username}</h1>
-                <p style={styles.email}>{email}</p>
-
-                <button onClick={() => keycloak.logout()} style={styles.logout}>
+                <h1 className="text-xl font-semibold mb-1">Welcome, {username}</h1>
+                <p className="text-gray-600 mb-6">{email}</p>
+                <button
+                    onClick={() => keycloak.logout()}
+                    className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded"
+                >
                     Logout
                 </button>
             </div>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        height: '100vh',
-        background: '#f3f4f6',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    card: {
-        background: 'white',
-        padding: '2rem',
-        borderRadius: '1rem',
-        boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
-        textAlign: 'center' as const,
-        minWidth: '300px',
-    },
-    avatar: {
-        width: 80,
-        height: 80,
-        borderRadius: '50%',
-        marginBottom: '1rem',
-    },
-    heading: {
-        fontSize: '1.5rem',
-        margin: 0,
-    },
-    email: {
-        color: '#4b5563',
-        marginBottom: '1.5rem',
-    },
-    logout: {
-        backgroundColor: '#ef4444',
-        border: 'none',
-        padding: '0.6rem 1.2rem',
-        borderRadius: '0.5rem',
-        color: 'white',
-        cursor: 'pointer',
-        fontWeight: 500,
-    },
-};
