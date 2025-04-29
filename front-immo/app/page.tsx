@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from '@/components/KeycloakProvider';
-import { useState } from 'react';
 
 import {
   DropdownMenu,
