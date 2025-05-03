@@ -1,6 +1,7 @@
 import './globals.css'
 import { ReactNode } from 'react'
 import { AuthProvider } from '@/components/KeycloakProvider'
+import { Navbar } from '@/components/Navbar'
 
 export const metadata = {
     title: 'Front Immo',
@@ -12,7 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <html lang="en">
         <body>
         <AuthProvider>
-            {children}
+            <Navbar />
         </AuthProvider>
         </body>
         </html>
