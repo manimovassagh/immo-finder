@@ -5,6 +5,7 @@ A scalable, modular real estate platform built using microservices architecture,
 
 ---
 
+
 ## 📐 Architecture Overview
 
 The system is built around the **Separation of Property Type and Purpose** (e.g., Apartment for Rent vs House for Sale), with microservices managing dedicated domains and communicating over REST (optionally with async messaging later).
