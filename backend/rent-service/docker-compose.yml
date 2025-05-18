@@ -20,6 +20,24 @@ services:
       timeout: 5s
       retries: 5
 
+  rent-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rent-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rent-service-db:5432/rent_service_db
+      SPRING_DATASOURCE_USERNAME: rental_user
+      SPRING_DATASOURCE_PASSWORD: rental_password
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - immo
+    restart: unless-stopped
+
 volumes:
   postgres_data:
 
