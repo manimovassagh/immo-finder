@@ -49,6 +49,9 @@ public class ApartmentForRent {
     @Column(name = "is_furnished")
     private Boolean isFurnished = false;
 
+    @Column(name = "is_available")
+    private Boolean isAvailable = true;
+
     @ManyToOne
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
@@ -138,6 +141,14 @@ public class ApartmentForRent {
 
     public void setIsFurnished(Boolean isFurnished) {
         this.isFurnished = isFurnished;
+    }
+
+    public Boolean getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 
     public Address getAddress() {

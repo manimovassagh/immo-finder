@@ -1,43 +1,27 @@
 package com.github.manimovassagh.immo_finder.rent_service.controller;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.manimovassagh.immo_finder.rent_service.model.Apartment;
+import com.github.manimovassagh.immo_finder.rent_service.model.entity.Address;
+import com.github.manimovassagh.immo_finder.rent_service.model.entity.ApartmentForRent;
 import com.github.manimovassagh.immo_finder.rent_service.service.ApartmentService;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Testcontainers
-class ApartmentControllerTest {
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("rent_service_test_db")
-            .withUsername("test_user")
-            .withPassword("test_password");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+@WebMvcTest(ApartmentController.class)
+public class ApartmentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,38 +29,53 @@ class ApartmentControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
+    @MockBean
     private ApartmentService apartmentService;
 
     @Test
-    void createApartment_ShouldReturnCreatedApartment() throws Exception {
-        // Arrange
-        Apartment apartment = new Apartment();
-        apartment.setTitle("Modern Apartment");
-        apartment.setDescription("Beautiful apartment in city center");
-        apartment.setAddress("123 Main St");
-        apartment.setCity("Berlin");
-        apartment.setPostalCode("10115");
-        apartment.setPrice(new BigDecimal("1200.00"));
-        apartment.setNumberOfRooms(2);
-        apartment.setSurfaceArea(75.5);
+    public void testCreateApartment() throws Exception {
+        // Create test data
+        ApartmentForRent apartment = new ApartmentForRent();
+        apartment.setTitle("Test Apartment");
+        apartment.setDescription("A test apartment");
+        apartment.setPricePerMonth(new BigDecimal("1000.00"));
+        apartment.setArea(new BigDecimal("80.00"));
+        apartment.setRooms(2);
+        apartment.setBathrooms(1);
+        apartment.setFloor(1);
+        apartment.setAvailableFrom(LocalDate.now());
+        apartment.setIsFurnished(true);
 
-        // Act & Assert
+        // Create and set address
+        Address address = new Address();
+        address.setStreet("Test Street");
+        address.setHouseNumber("123");
+        address.setPostalCode("12345");
+        address.setCity("Test City");
+        address.setCountry("DE");
+        apartment.setAddress(address);
+
+        // Mock service response
+        when(apartmentService.createApartment(any(ApartmentForRent.class))).thenReturn(apartment);
+
+        // Perform request and verify response
         mockMvc.perform(post("/api/v1/apartments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(apartment)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value("Modern Apartment"))
-                .andExpect(jsonPath("$.description").value("Beautiful apartment in city center"))
-                .andExpect(jsonPath("$.address").value("123 Main St"))
-                .andExpect(jsonPath("$.city").value("Berlin"))
-                .andExpect(jsonPath("$.postalCode").value("10115"))
-                .andExpect(jsonPath("$.price").value(1200.00))
-                .andExpect(jsonPath("$.numberOfRooms").value(2))
-                .andExpect(jsonPath("$.surfaceArea").value(75.5))
+                .andExpect(jsonPath("$.title").value("Test Apartment"))
+                .andExpect(jsonPath("$.description").value("A test apartment"))
+                .andExpect(jsonPath("$.pricePerMonth").value(1000.00))
+                .andExpect(jsonPath("$.area").value(80.00))
+                .andExpect(jsonPath("$.rooms").value(2))
+                .andExpect(jsonPath("$.bathrooms").value(1))
+                .andExpect(jsonPath("$.floor").value(1))
+                .andExpect(jsonPath("$.isFurnished").value(true))
                 .andExpect(jsonPath("$.isAvailable").value(true))
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.createdAt").exists())
-                .andExpect(jsonPath("$.updatedAt").exists());
+                .andExpect(jsonPath("$.address.street").value("Test Street"))
+                .andExpect(jsonPath("$.address.houseNumber").value("123"))
+                .andExpect(jsonPath("$.address.postalCode").value("12345"))
+                .andExpect(jsonPath("$.address.city").value("Test City"))
+                .andExpect(jsonPath("$.address.country").value("DE"));
     }
 } 

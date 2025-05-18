@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.manimovassagh.immo_finder.rent_service.model.Apartment;
+import com.github.manimovassagh.immo_finder.rent_service.model.entity.ApartmentForRent;
 import com.github.manimovassagh.immo_finder.rent_service.service.ApartmentService;
 
 @RestController
@@ -21,8 +21,8 @@ public class ApartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Apartment> createApartment(@RequestBody Apartment apartment) {
-        Apartment createdApartment = apartmentService.createApartment(apartment);
+    public ResponseEntity<ApartmentForRent> createApartment(@RequestBody ApartmentForRent apartment) {
+        ApartmentForRent createdApartment = apartmentService.createApartment(apartment);
         return new ResponseEntity<>(createdApartment, HttpStatus.CREATED);
     }
 } 

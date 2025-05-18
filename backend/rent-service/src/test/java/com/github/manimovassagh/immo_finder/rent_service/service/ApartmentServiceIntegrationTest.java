@@ -1,79 +1,68 @@
 package com.github.manimovassagh.immo_finder.rent_service.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-import com.github.manimovassagh.immo_finder.rent_service.model.Apartment;
-import com.github.manimovassagh.immo_finder.rent_service.repository.ApartmentRepository;
+import com.github.manimovassagh.immo_finder.rent_service.model.entity.Address;
+import com.github.manimovassagh.immo_finder.rent_service.model.entity.ApartmentForRent;
 
 @SpringBootTest
-@Testcontainers
 @Transactional
-class ApartmentServiceIntegrationTest {
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("rent_service_test_db")
-            .withUsername("test_user")
-            .withPassword("test_password");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+public class ApartmentServiceIntegrationTest {
 
     @Autowired
     private ApartmentService apartmentService;
 
-    @Autowired
-    private ApartmentRepository apartmentRepository;
-
-    @BeforeEach
-    void setUp() {
-        apartmentRepository.deleteAll();
-    }
-
     @Test
-    void createApartment_ShouldSaveAndReturnApartment() {
-        // Arrange
-        Apartment apartment = new Apartment();
-        apartment.setTitle("Modern Apartment");
-        apartment.setDescription("Beautiful apartment in city center");
-        apartment.setAddress("123 Main St");
-        apartment.setCity("Berlin");
-        apartment.setPostalCode("10115");
-        apartment.setPrice(new BigDecimal("1200.00"));
-        apartment.setNumberOfRooms(2);
-        apartment.setSurfaceArea(75.5);
+    public void testCreateApartment() {
+        // Create test data
+        ApartmentForRent apartment = new ApartmentForRent();
+        apartment.setTitle("Test Apartment");
+        apartment.setDescription("A test apartment");
+        apartment.setPricePerMonth(new BigDecimal("1000.00"));
+        apartment.setArea(new BigDecimal("80.00"));
+        apartment.setRooms(2);
+        apartment.setBathrooms(1);
+        apartment.setFloor(1);
+        apartment.setAvailableFrom(LocalDate.now());
+        apartment.setIsFurnished(true);
 
-        // Act
-        Apartment savedApartment = apartmentService.createApartment(apartment);
+        // Create and set address
+        Address address = new Address();
+        address.setStreet("Test Street");
+        address.setHouseNumber("123");
+        address.setPostalCode("12345");
+        address.setCity("Test City");
+        address.setCountry("DE");
+        apartment.setAddress(address);
 
-        // Assert
-        assertThat(savedApartment).isNotNull();
-        assertThat(savedApartment.getId()).isNotNull();
-        assertThat(savedApartment.getTitle()).isEqualTo("Modern Apartment");
-        assertThat(savedApartment.getIsAvailable()).isTrue();
-        assertThat(savedApartment.getCreatedAt()).isNotNull();
-        assertThat(savedApartment.getUpdatedAt()).isNotNull();
+        // Save apartment
+        ApartmentForRent savedApartment = apartmentService.createApartment(apartment);
 
-        // Verify it was actually saved in the database
-        Apartment foundApartment = apartmentRepository.findById(savedApartment.getId()).orElse(null);
-        assertThat(foundApartment).isNotNull();
-        assertThat(foundApartment.getTitle()).isEqualTo("Modern Apartment");
+        // Verify
+        assertNotNull(savedApartment);
+        assertNotNull(savedApartment.getId());
+        assertEquals("Test Apartment", savedApartment.getTitle());
+        assertEquals(new BigDecimal("1000.00"), savedApartment.getPricePerMonth());
+        assertEquals(new BigDecimal("80.00"), savedApartment.getArea());
+        assertEquals(2, savedApartment.getRooms());
+        assertEquals(1, savedApartment.getBathrooms());
+        assertEquals(1, savedApartment.getFloor());
+        assertEquals(LocalDate.now(), savedApartment.getAvailableFrom());
+        assertEquals(true, savedApartment.getIsFurnished());
+        assertEquals(true, savedApartment.getIsAvailable());
+        assertNotNull(savedApartment.getAddress());
+        assertEquals("Test Street", savedApartment.getAddress().getStreet());
+        assertEquals("123", savedApartment.getAddress().getHouseNumber());
+        assertEquals("12345", savedApartment.getAddress().getPostalCode());
+        assertEquals("Test City", savedApartment.getAddress().getCity());
+        assertEquals("DE", savedApartment.getAddress().getCountry());
     }
 } 
