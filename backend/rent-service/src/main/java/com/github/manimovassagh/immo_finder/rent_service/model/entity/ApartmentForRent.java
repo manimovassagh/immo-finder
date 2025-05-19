@@ -1,7 +1,6 @@
 package com.github.manimovassagh.immo_finder.rent_service.model.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -10,8 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,6 +18,9 @@ public class ApartmentForRent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(nullable = false)
+    private UUID userId;
 
     @Column(nullable = false)
     private String title;
@@ -37,24 +37,8 @@ public class ApartmentForRent {
     @Column(nullable = false)
     private Integer rooms;
 
-    @Column
-    private Integer bathrooms = 1;
-
-    @Column
-    private Integer floor;
-
-    @Column(name = "available_from")
-    private LocalDate availableFrom;
-
-    @Column(name = "is_furnished")
-    private Boolean isFurnished = false;
-
     @Column(name = "is_available")
     private Boolean isAvailable = true;
-
-    @ManyToOne
-    @JoinColumn(name = "address_id", nullable = false)
-    private Address address;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -69,6 +53,14 @@ public class ApartmentForRent {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -111,52 +103,12 @@ public class ApartmentForRent {
         this.rooms = rooms;
     }
 
-    public Integer getBathrooms() {
-        return bathrooms;
-    }
-
-    public void setBathrooms(Integer bathrooms) {
-        this.bathrooms = bathrooms;
-    }
-
-    public Integer getFloor() {
-        return floor;
-    }
-
-    public void setFloor(Integer floor) {
-        this.floor = floor;
-    }
-
-    public LocalDate getAvailableFrom() {
-        return availableFrom;
-    }
-
-    public void setAvailableFrom(LocalDate availableFrom) {
-        this.availableFrom = availableFrom;
-    }
-
-    public Boolean getIsFurnished() {
-        return isFurnished;
-    }
-
-    public void setIsFurnished(Boolean isFurnished) {
-        this.isFurnished = isFurnished;
-    }
-
     public Boolean getIsAvailable() {
         return isAvailable;
     }
 
     public void setIsAvailable(Boolean isAvailable) {
         this.isAvailable = isAvailable;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -19,6 +19,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
   rent-service:
     build:
@@ -31,12 +32,19 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://rent-service-db:5432/rent_service_db
       SPRING_DATASOURCE_USERNAME: rental_user
       SPRING_DATASOURCE_PASSWORD: rental_password
+      SERVER_PORT: 8082
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - immo
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   postgres_data:

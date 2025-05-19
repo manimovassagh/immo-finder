@@ -1,29 +1,56 @@
 services:
-  postgres:
+  keycloak-db:
     image: postgres:15
-    container_name: keycloak_postgres
+    container_name: keycloak-db
     restart: always
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
     volumes:
       - keycloak_pg_data:/var/lib/postgresql/data
+    networks:
+      - immo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
     container_name: keycloak
-    command: start-dev
+    command: start-dev --import-realm
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Main Keycloak server port (includes admin console)
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: password
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+    volumes:
+      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    networks:
+      - immo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   keycloak_pg_data:
+
+networks:
+  immo:
+    external: true
 
