@@ -1,7 +1,11 @@
 package com.github.manimovassagh.immo_finder.rent_service.controller;
 
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +31,25 @@ public class ApartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ApartmentForRentDTO>> createApartment(@RequestBody ApartmentForRentDTO apartmentDTO) {
+    public ResponseEntity<ApiResponse<ApartmentForRentDTO>> createApartment(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestBody ApartmentForRentDTO apartmentDTO) {
         try {
+            // Extract user ID from JWT token
+            String userId = jwt.getSubject();
+            apartmentDTO = new ApartmentForRentDTO(
+                apartmentDTO.id(),
+                UUID.fromString(userId),
+                apartmentDTO.title(),
+                apartmentDTO.description(),
+                apartmentDTO.pricePerMonth(),
+                apartmentDTO.area(),
+                apartmentDTO.rooms(),
+                apartmentDTO.isAvailable(),
+                apartmentDTO.createdAt(),
+                apartmentDTO.updatedAt()
+            );
+
             ApartmentForRent apartment = apartmentMapper.toEntity(apartmentDTO);
             ApartmentForRent createdApartment = apartmentService.createApartment(apartment);
             ApartmentForRentDTO createdApartmentDTO = apartmentMapper.toDTO(createdApartment);

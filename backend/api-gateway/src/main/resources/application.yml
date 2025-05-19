@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/immo-finder
+  cloud:
+    gateway:
+      routes:
+        - id: rent-service
+          uri: http://rent-service:8082
+          predicates:
+            - Path=/api/v1/apartments/**
+          filters:
+            - StripPrefix=1
+            - AddRequestHeader=Authorization, #{request.headers.Authorization}
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true 
