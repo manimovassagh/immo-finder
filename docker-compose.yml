@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  rent-service:
+    build:
+      context: ./backend/rent-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rent-service-db
+      - keycloak
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://rent-service-db:5432/rent_service
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/immo-finder
+    networks:
+      - immo-network
+
+  rent-service-db:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=rent_service
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - immo-network
+
+  keycloak-db:
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - keycloak_postgres_data:/var/lib/postgresql/data
+    networks:
+      - immo-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm-export.json
+    command: start-dev --import-realm
+    depends_on:
+      - keycloak-db
+    networks:
+      - immo-network
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+
+networks:
+  immo-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  keycloak_postgres_data: 

@@ -1,9 +1,9 @@
 package com.github.manimovassagh.immo_finder.rent_service.util;
 
 public class ApiResponse<T> {
-    private String result;    // SUCCESS or ERROR
-    private String message;   // success or error message
-    private T data;           // return object from service class, if successful
+    private String result;
+    private String message;
+    private T data;
 
     public ApiResponse() {
     }

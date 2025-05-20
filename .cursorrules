@@ -93,3 +93,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ApiResponse.error(400, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
+
+
+version in docker compose is deprecated. dont use it
+dont use lombok
