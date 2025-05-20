@@ -3,13 +3,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/rent_service
     username: postgres
     password: postgres
-
-
-server:
-  port: 8082
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/master # Make sure this matches your Keycloak realm
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs 
+          issuer-uri: http://keycloak:8080/realms/immo-finder # Corrected realm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+server:
+  port: 8082 
