@@ -14,6 +14,7 @@ import com.github.manimovassagh.immo_finder.rent_service.model.mapper.ApartmentM
 import com.github.manimovassagh.immo_finder.rent_service.repository.AddressRepository;
 import com.github.manimovassagh.immo_finder.rent_service.repository.ApartmentRepository;
 import com.github.manimovassagh.immo_finder.rent_service.service.ApartmentService;
+import com.github.manimovassagh.immo_finder.rent_service.util.SecurityUtils;
 
 @Service
 public class ApartmentServiceImpl implements ApartmentService {
@@ -34,7 +35,14 @@ public class ApartmentServiceImpl implements ApartmentService {
         try {
             // Create apartment entity
             Apartment apartment = ApartmentMapper.toEntity(apartmentDTO);
-            apartment.setUserId("mock-user-id");
+            
+            // Get User ID from Security Context
+            String userId = SecurityUtils.getCurrentUserId();
+            if (userId == null) {
+                logger.error("User ID not found in security context. This should not happen for an authenticated request.");
+                throw new IllegalStateException("User ID could not be determined from the security context.");
+            }
+            apartment.setUserId(userId);
             
             // Get the address from the apartment
             Address address = apartment.getAddress();

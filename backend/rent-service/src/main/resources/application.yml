@@ -6,4 +6,10 @@ spring:
 
 
 server:
-  port: 8082 
+  port: 8082
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/master # Make sure this matches your Keycloak realm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs 
