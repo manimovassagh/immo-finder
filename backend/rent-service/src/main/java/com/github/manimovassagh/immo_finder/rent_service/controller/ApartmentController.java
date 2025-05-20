@@ -11,10 +11,17 @@ import com.github.manimovassagh.immo_finder.rent_service.model.dto.ApartmentDTO;
 import com.github.manimovassagh.immo_finder.rent_service.service.ApartmentService;
 import com.github.manimovassagh.immo_finder.rent_service.util.ApiResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/apartments")
+@Tag(name = "Apartment Management", description = "APIs for managing rental apartments")
+@SecurityRequirement(name = "bearerAuth")
 public class ApartmentController {
 
     private final ApartmentService apartmentService;
@@ -25,7 +32,18 @@ public class ApartmentController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiResponse<ApartmentDTO>> createApartment(@Valid @RequestBody ApartmentDTO apartmentDTO) {
+    @Operation(
+        summary = "Create a new apartment",
+        description = "Creates a new apartment with the provided details"
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Apartment created successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing token")
+    })
+    public ResponseEntity<ApiResponse<ApartmentDTO>> createApartment(
+            @Parameter(description = "Apartment details", required = true)
+            @Valid @RequestBody ApartmentDTO apartmentDTO) {
         try {
             ApartmentDTO createdApartment = apartmentService.createApartment(apartmentDTO);
             return ResponseEntity.ok(new ApiResponse<>("SUCCESS", "Apartment created successfully", createdApartment));
