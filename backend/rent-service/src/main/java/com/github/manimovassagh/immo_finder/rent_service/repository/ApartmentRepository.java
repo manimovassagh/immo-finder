@@ -9,4 +9,4 @@ import com.github.manimovassagh.immo_finder.rent_service.model.entity.Apartment;
 
 @Repository
 public interface ApartmentRepository extends JpaRepository<Apartment, UUID> {
-} 
+}
