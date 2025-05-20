@@ -11,4 +11,7 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 server:
-  port: 8082 
+  port: 8082
+
+file:
+  upload-dir: ./uploads/images # Base directory for photo uploads 

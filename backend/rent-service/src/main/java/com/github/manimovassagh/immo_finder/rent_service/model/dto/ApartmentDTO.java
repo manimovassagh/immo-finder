@@ -1,6 +1,7 @@
 package com.github.manimovassagh.immo_finder.rent_service.model.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
@@ -46,10 +47,15 @@ public record ApartmentDTO(
     
     @NotNull
     Boolean isAvailable,
+
+    @NotBlank
+    String userId,
     
     @NotNull
     @Valid
-    AddressDTO address
+    AddressDTO address,
+
+    List<String> photoPaths
 ) {
     public ApartmentDTO {
         if (title == null || title.isBlank()) {
@@ -81,6 +87,9 @@ public record ApartmentDTO(
         }
         if (isAvailable == null) {
             throw new IllegalArgumentException("Availability status must be specified");
+        }
+        if (userId == null || userId.isBlank()) {
+            throw new IllegalArgumentException("User ID cannot be blank");
         }
         if (address == null) {
             throw new IllegalArgumentException("Address cannot be null");

@@ -45,7 +45,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             apartment.setUserId(userId);
             
             // Get the address from the apartment
-            Address address = apartment.getAddress();
+            Address address = apartment.getApartmentAddress();
             
             logger.info("Checking for existing address: street='{}', number='{}', postalCode='{}', city='{}', country='{}'", address.getStreet(), address.getNumber(), address.getPostalCode(), address.getCity(), address.getCountry());
             // Check if address already exists
@@ -68,8 +68,8 @@ public class ApartmentServiceImpl implements ApartmentService {
             address = addressRepository.save(address);
             
             // Set up the bidirectional relationship
-            address.setApartment(apartment);
-            apartment.setAddress(address);
+            // address.setApartment(apartment); // Commented out as Address no longer has setApartment
+            apartment.setApartmentAddress(address);
             
             // Save the apartment
             apartment = apartmentRepository.save(apartment);

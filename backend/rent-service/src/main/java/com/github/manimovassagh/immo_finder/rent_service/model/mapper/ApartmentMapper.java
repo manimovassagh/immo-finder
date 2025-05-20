@@ -5,33 +5,43 @@ import com.github.manimovassagh.immo_finder.rent_service.model.entity.Apartment;
 
 public class ApartmentMapper {
     public static ApartmentDTO toDTO(Apartment apartment) {
+        if (apartment == null) {
+            return null;
+        }
         return new ApartmentDTO(
-                apartment.getId(),
-                apartment.getTitle(),
-                apartment.getDescription(),
-                apartment.getColdRent(),
-                apartment.getAdditionalCosts(),
-                apartment.getTotalPrice(),
-                apartment.getNumberOfRooms(),
-                apartment.getNumberOfBathrooms(),
-                apartment.getArea(),
-                apartment.getIsAvailable(),
-                AddressMapper.toDTO(apartment.getAddress())
+            apartment.getId(),
+            apartment.getTitle(),
+            apartment.getDescription(),
+            apartment.getColdRent(),
+            apartment.getAdditionalCosts(),
+            apartment.getTotalPrice(),
+            apartment.getNumberOfRooms(),
+            apartment.getNumberOfBathrooms(),
+            apartment.getArea(),
+            apartment.getIsAvailable(),
+            apartment.getUserId(),
+            AddressMapper.toDTO(apartment.getApartmentAddress()),
+            apartment.getPhotoPaths()
         );
     }
 
-    public static Apartment toEntity(ApartmentDTO apartmentDTO) {
+    public static Apartment toEntity(ApartmentDTO dto) {
+        if (dto == null) {
+            return null;
+        }
         Apartment apartment = new Apartment();
-        apartment.setId(apartmentDTO.id());
-        apartment.setTitle(apartmentDTO.title());
-        apartment.setDescription(apartmentDTO.description());
-        apartment.setColdRent(apartmentDTO.coldRent());
-        apartment.setAdditionalCosts(apartmentDTO.additionalCosts());
-        apartment.setNumberOfRooms(apartmentDTO.numberOfRooms());
-        apartment.setNumberOfBathrooms(apartmentDTO.numberOfBathrooms());
-        apartment.setArea(apartmentDTO.area());
-        apartment.setIsAvailable(apartmentDTO.isAvailable());
-        apartment.setAddress(AddressMapper.toEntity(apartmentDTO.address()));
+        apartment.setId(dto.id());
+        apartment.setTitle(dto.title());
+        apartment.setDescription(dto.description());
+        apartment.setColdRent(dto.coldRent());
+        apartment.setAdditionalCosts(dto.additionalCosts());
+        apartment.setNumberOfRooms(dto.numberOfRooms());
+        apartment.setNumberOfBathrooms(dto.numberOfBathrooms());
+        apartment.setArea(dto.area());
+        apartment.setIsAvailable(dto.isAvailable());
+        apartment.setUserId(dto.userId());
+        apartment.setApartmentAddress(AddressMapper.toEntity(dto.address()));
+        apartment.setPhotoPaths(dto.photoPaths());
         return apartment;
     }
 } 

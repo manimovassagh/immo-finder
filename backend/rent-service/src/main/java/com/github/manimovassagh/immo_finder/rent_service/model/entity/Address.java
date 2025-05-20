@@ -4,11 +4,9 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -36,7 +34,7 @@ public class Address {
     @Size(min = 2, max = 2)
     private String country = "DE";
 
-    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
+   // @OneToOne(mappedBy = "apartmentAddress", fetch = FetchType.LAZY)
     private Apartment apartment;
 
     // Getters and Setters
@@ -88,11 +86,6 @@ public class Address {
         this.country = country;
     }
 
-    public Apartment getApartment() {
-        return apartment;
-    }
 
-    public void setApartment(Apartment apartment) {
-        this.apartment = apartment;
-    }
+
 } 

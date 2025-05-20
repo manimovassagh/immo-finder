@@ -1,9 +1,14 @@
 package com.github.manimovassagh.immo_finder.rent_service.model.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +22,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 public class Apartment {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false)
@@ -58,9 +63,14 @@ public class Apartment {
     @Column(nullable = false)
     private String userId;  // Keycloak user ID
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false)
-    private Address address;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
+    private Address apartmentAddress;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "apartment_photo_paths", joinColumns = @JoinColumn(name = "apartment_id"))
+    @Column(name = "photo_path")
+    private List<String> photoPaths = new ArrayList<>();
 
     // Getters and Setters
     public UUID getId() {
@@ -155,11 +165,26 @@ public class Apartment {
         this.userId = userId;
     }
 
-    public Address getAddress() {
-        return address;
+    public Address getApartmentAddress() {
+        return apartmentAddress;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setApartmentAddress(Address apartmentAddress) {
+        this.apartmentAddress = apartmentAddress;
+    }
+
+    public List<String> getPhotoPaths() {
+        return photoPaths;
+    }
+
+    public void setPhotoPaths(List<String> photoPaths) {
+        this.photoPaths = photoPaths;
+    }
+
+    public void addPhotoPath(String photoPath) {
+        if (this.photoPaths == null) {
+            this.photoPaths = new ArrayList<>();
+        }
+        this.photoPaths.add(photoPath);
     }
 } 
