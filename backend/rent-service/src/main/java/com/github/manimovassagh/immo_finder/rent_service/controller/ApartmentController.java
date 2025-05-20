@@ -1,7 +1,6 @@
 package com.github.manimovassagh.immo_finder.rent_service.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +13,12 @@ import com.github.manimovassagh.immo_finder.rent_service.util.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/apartments")
 @Tag(name = "Apartment Management", description = "APIs for managing rental apartments")
-@SecurityRequirement(name = "bearerAuth")
 public class ApartmentController {
 
     private final ApartmentService apartmentService;
@@ -31,14 +28,13 @@ public class ApartmentController {
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
     @Operation(
         summary = "Create a new apartment",
         description = "Creates a new apartment with the provided details"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Apartment created successfully"),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data or duplicate address"),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing token")
     })
     public ResponseEntity<ApiResponse<ApartmentDTO>> createApartment(
@@ -48,11 +44,11 @@ public class ApartmentController {
             ApartmentDTO createdApartment = apartmentService.createApartment(apartmentDTO);
             return ResponseEntity.ok(new ApiResponse<>("SUCCESS", "Apartment created successfully", createdApartment));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
+            return ResponseEntity.status(400)
                     .body(new ApiResponse<>("ERROR", e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                    .body(new ApiResponse<>("ERROR", "Failed to create apartment", null));
+                    .body(new ApiResponse<>("ERROR", "Failed to create apartment: " + e.getMessage(), null));
         }
     }
 } 

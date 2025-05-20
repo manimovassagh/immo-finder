@@ -3,19 +3,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/rent_service
     username: postgres
     password: postgres
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        '[format_sql]': true
-        '[dialect]': org.hibernate.dialect.PostgreSQLDialect
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://keycloak:8080/realms/immo-finder
+
 
 server:
   port: 8082 
