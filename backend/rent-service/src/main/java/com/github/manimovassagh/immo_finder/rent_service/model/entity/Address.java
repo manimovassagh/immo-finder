@@ -26,6 +26,7 @@ public class Address {
     @Column(nullable = false)
     @Size(min = 5, max = 5)
     private String postalCode;
+
     @Column(nullable = false)
     @Size(min = 1, max = 100)
     private String city;
@@ -33,9 +34,6 @@ public class Address {
     @Column(nullable = false)
     @Size(min = 2, max = 2)
     private String country = "DE";
-
-   // @OneToOne(mappedBy = "apartmentAddress", fetch = FetchType.LAZY)
-    private Apartment apartment;
 
     // Getters and Setters
     public UUID getId() {
@@ -88,4 +86,4 @@ public class Address {
 
 
 
-} 
+}

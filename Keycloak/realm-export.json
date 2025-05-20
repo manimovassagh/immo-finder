@@ -69,6 +69,8 @@
       "clientId": "rent-service",
       "enabled": true,
       "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "rent-service-secret",
       "redirectUris": [
         "http://localhost:8082/*"
       ],
