@@ -39,6 +39,9 @@ public class RentApartment {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
+
     private String title;
 
     @Column(columnDefinition = "TEXT")

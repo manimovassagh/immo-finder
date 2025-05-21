@@ -28,6 +28,7 @@ CREATE TABLE rent_apartment (
     property_type VARCHAR(50),
     pets_allowed BOOLEAN,
     heating_type VARCHAR(50),
+    user_id UUID NOT NULL,
     elevator BOOLEAN,
     barrier_free BOOLEAN,
     created_at TIMESTAMP,
