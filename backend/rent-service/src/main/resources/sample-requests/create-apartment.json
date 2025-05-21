@@ -1,0 +1,28 @@
+{
+  "title": "Modern 2-bedroom apartment in Berlin",
+  "description": "A beautiful, modern apartment in the heart of Berlin with great public transport connections.",
+  "basePrice": 1200.00,
+  "additionalCosts": 200.00,
+  "rooms": 2,
+  "furnished": true,
+  "hasParking": true,
+  "hasBalcony": true,
+  "hasStorage": false,
+  "size": 75.5,
+  "floor": 3,
+  "totalFloors": 5,
+  "availableFrom": "2023-12-01",
+  "energyCertificate": true,
+  "yearBuilt": 2010,
+  "propertyType": "APARTMENT",
+  "petsAllowed": true,
+  "heatingType": "GAS",
+  "elevator": true,
+  "barrierFree": false,
+  "address": {
+    "street": "Berliner Straße",
+    "houseNumber": "123",
+    "postalCode": "10115",
+    "city": "Berlin"
+  }
+}

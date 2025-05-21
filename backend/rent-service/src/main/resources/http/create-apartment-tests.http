@@ -1,0 +1,95 @@
+### Environment variables
+@host = localhost
+@port = 8082
+@baseUrl = http://{{host}}:{{port}}
+
+### Create a new apartment with all fields
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Modern 2-bedroom apartment in Berlin",
+    "description": "A beautiful, modern apartment in the heart of Berlin with great public transport connections.",
+    "basePrice": 1200.00,
+    "additionalCosts": 200.00,
+    "rooms": 2,
+    "furnished": true,
+    "hasParking": true,
+    "hasBalcony": true,
+    "hasStorage": false,
+    "size": 75.5,
+    "floor": 3,
+    "totalFloors": 5,
+    "availableFrom": "2023-12-01",
+    "energyCertificate": true,
+    "yearBuilt": 2010,
+    "propertyType": "APARTMENT",
+    "petsAllowed": true,
+    "heatingType": "GAS",
+    "elevator": true,
+    "barrierFree": false,
+    "address": {
+        "street": "Berliner Straße",
+        "houseNumber": "123",
+        "postalCode": "10115",
+        "city": "Berlin"
+    }
+}
+
+### Create a new apartment with minimum required fields
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Minimal apartment listing",
+    "basePrice": 800.00,
+    "additionalCosts": 150.00,
+    "rooms": 1
+}
+
+### Create an invalid apartment (missing required fields)
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "description": "This request will fail because it's missing required fields",
+    "furnished": true
+}
+
+### Create an apartment with invalid property type
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Test apartment",
+    "basePrice": 1000.00,
+    "additionalCosts": 200.00,
+    "rooms": 2,
+    "propertyType": "INVALID_TYPE"
+}
+
+### Create an apartment with invalid heating type
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Test apartment",
+    "basePrice": 1000.00,
+    "additionalCosts": 200.00,
+    "rooms": 2,
+    "heatingType": "INVALID_HEATING"
+}
+
+### Create an apartment with future availability date
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Future apartment",
+    "basePrice": 1500.00,
+    "additionalCosts": 300.00,
+    "rooms": 3,
+    "availableFrom": "2024-01-01",
+    "propertyType": "APARTMENT",
+    "heatingType": "CENTRAL"
+}
