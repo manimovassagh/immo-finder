@@ -25,6 +25,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Entity
 @Table(name = "rent_apartment")
 @Getter
@@ -40,6 +41,9 @@ public class RentApartment {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Column(name = "base_price", nullable = false)
     private BigDecimal basePrice;
 
@@ -48,8 +52,10 @@ public class RentApartment {
 
     @Transient
     public BigDecimal getTotalPrice() {
-        if (basePrice == null) return additionalCosts;
-        if (additionalCosts == null) return basePrice;
+        if (basePrice == null)
+            return additionalCosts;
+        if (additionalCosts == null)
+            return basePrice;
         return basePrice.add(additionalCosts);
     }
 
@@ -78,9 +84,6 @@ public class RentApartment {
 
     @Column(name = "available_from")
     private LocalDate availableFrom;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
 
     @Column(name = "energy_certificate")
     private Boolean energyCertificate;
