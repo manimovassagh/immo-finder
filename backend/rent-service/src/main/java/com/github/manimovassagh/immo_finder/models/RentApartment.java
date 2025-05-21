@@ -1,6 +1,7 @@
 package com.github.manimovassagh.immo_finder.models;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -8,6 +9,8 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -22,7 +25,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Entity
 @Table(name = "rent_apartment")
 @Getter
@@ -67,6 +69,41 @@ public class RentApartment {
     private boolean hasStorage;
 
     private double size;
+
+    @Column(name = "floor")
+    private Integer floor;
+
+    @Column(name = "total_floors")
+    private Integer totalFloors;
+
+    @Column(name = "available_from")
+    private LocalDate availableFrom;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "energy_certificate")
+    private Boolean energyCertificate;
+
+    @Column(name = "year_built")
+    private Integer yearBuilt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "property_type")
+    private PropertyType propertyType;
+
+    @Column(name = "pets_allowed")
+    private Boolean petsAllowed;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "heating_type")
+    private HeatingType heatingType;
+
+    @Column(name = "elevator")
+    private Boolean elevator;
+
+    @Column(name = "barrier_free")
+    private Boolean barrierFree;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
