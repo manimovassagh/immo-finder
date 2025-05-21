@@ -29,4 +29,6 @@ public class Address {
     private String houseNumber;
     private String postalCode;
     private String city;
+    @Builder.Default
+    private String country="DE";
 }
