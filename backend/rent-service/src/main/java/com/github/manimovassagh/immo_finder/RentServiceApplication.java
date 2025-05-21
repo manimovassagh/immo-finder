@@ -1,4 +1,4 @@
-package com.github.manimovassagh.immo_finder.rent_service;
+package com.github.manimovassagh.immo_finder;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
