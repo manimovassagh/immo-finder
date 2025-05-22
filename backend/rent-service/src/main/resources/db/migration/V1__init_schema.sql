@@ -4,7 +4,9 @@ CREATE TABLE address (
     street VARCHAR(255),
     house_number VARCHAR(50),
     postal_code VARCHAR(20),
-    city VARCHAR(100)
+    city VARCHAR(100),
+    country VARCHAR(100)
+
 );
 
 -- Rent Apartment Table
@@ -23,6 +25,7 @@ CREATE TABLE rent_apartment (
     total_floors INTEGER,
     available_from DATE,
     description TEXT,
+    country VARCHAR(100),
     energy_certificate BOOLEAN,
     year_built INTEGER,
     property_type VARCHAR(50),

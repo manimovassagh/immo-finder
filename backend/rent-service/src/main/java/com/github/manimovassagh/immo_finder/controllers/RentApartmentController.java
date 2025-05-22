@@ -27,6 +27,8 @@ public class RentApartmentController {
 
     @PostMapping
     public ResponseEntity<RentApartment> createApartment(@Valid @RequestBody CreateApartmentRequest request) {
+
+
         // Create a new RentApartment from the request
         RentApartment apartment = RentApartment.builder()
                 .userId(request.getUserId() != null ? request.getUserId() : UUID.randomUUID())
