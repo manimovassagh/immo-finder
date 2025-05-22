@@ -2,6 +2,8 @@ package com.github.manimovassagh.immo_finder.models;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,5 +37,6 @@ public class Photo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_id")
+    @JsonIgnore
     private RentApartment apartment;
 }

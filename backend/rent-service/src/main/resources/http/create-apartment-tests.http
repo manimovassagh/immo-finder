@@ -31,7 +31,7 @@ Content-Type: application/json
     "barrierFree": false,
     "address": {
         "street": "Berliner Straße",
-        "houseNumber": "123233",
+        "houseNumber": "88",
         "postalCode": "10115",
         "city": "Berlin"
     }

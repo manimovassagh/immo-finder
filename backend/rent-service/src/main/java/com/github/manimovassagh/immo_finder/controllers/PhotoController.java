@@ -59,7 +59,7 @@ public class PhotoController {
             apartment.setPhotos(new ArrayList<>());
         }
         apartment.getPhotos().addAll(photos);
-        rentApartmentRepository.save(apartment);
-        return ResponseEntity.ok(photos);
+        RentApartment savedApartment = rentApartmentRepository.save(apartment);
+        return ResponseEntity.ok(savedApartment.getPhotos());
     }
 }
