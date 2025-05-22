@@ -1,7 +1,10 @@
 package com.github.manimovassagh.immo_finder.controllers;
 
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.manimovassagh.immo_finder.dtos.CreateApartmentRequest;
+import com.github.manimovassagh.immo_finder.models.Address;
 import com.github.manimovassagh.immo_finder.models.RentApartment;
 import com.github.manimovassagh.immo_finder.repositories.RentApartmentRepository;
 
@@ -20,13 +24,32 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/apartments")
 @Validated
+@RequiredArgsConstructor
 public class RentApartmentController {
 
-    @Autowired
-    private RentApartmentRepository rentApartmentRepository;
+
+    private final RentApartmentRepository rentApartmentRepository;
 
     @PostMapping
-    public ResponseEntity<RentApartment> createApartment(@Valid @RequestBody CreateApartmentRequest request) {
+    public ResponseEntity<?> createApartment(@Valid @RequestBody CreateApartmentRequest request) {
+        // Check if address exists
+        if (request.getAddress() != null) {
+            Address address = request.getAddress();
+            boolean addressExists = rentApartmentRepository.existsByAddress(
+                address.getStreet(),
+                address.getHouseNumber(),
+                address.getPostalCode(),
+                address.getCity(),
+                address.getCountry()
+            );
+
+            if (addressExists) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Address already exists");
+                errorResponse.put("message", "An apartment with this address is already listed");
+                return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+            }
+        }
 
 
         // Create a new RentApartment from the request

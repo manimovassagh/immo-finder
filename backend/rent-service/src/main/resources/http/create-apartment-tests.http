@@ -31,8 +31,8 @@ Content-Type: application/json
     "barrierFree": false,
     "address": {
         "street": "Berliner Straße",
-        "houseNumber": "123",
-        "postalCode": "10115",
+        "houseNumber": "1232",
+        "postalCode": "1011522",
         "city": "Berlin"
     }
 }
@@ -93,4 +93,26 @@ Content-Type: application/json
     "availableFrom": "2024-01-01",
     "propertyType": "APARTMENT",
     "heatingType": "CENTRAL"
+}
+
+### Test duplicate address validation (should return 409 Conflict)
+# First run the first request to create an apartment, then run this one to test the validation
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Duplicate address test",
+    "description": "This request should fail because the address already exists",
+    "basePrice": 1100.00,
+    "additionalCosts": 180.00,
+    "rooms": 2,
+    "furnished": false,
+    "propertyType": "APARTMENT",
+    "heatingType": "CENTRAL",
+    "address": {
+        "street": "Berliner Straße",
+        "houseNumber": "123",
+        "postalCode": "10115",
+        "city": "Berlin"
+    }
 }
