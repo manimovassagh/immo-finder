@@ -1,9 +1,8 @@
 package com.github.manimovassagh.immo_finder.controllers;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.notNullValue;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,8 +49,8 @@ public class RentApartmentControllerTest {
                 "additionalCosts": 150.00,
                 "rooms": 1,
                 "address": {
-                    "street": "Test Street",
-                    "houseNumber": "42",
+                    "street": "First Test Street",
+                    "houseNumber": "42A",
                     "postalCode": "12345",
                     "city": "Test City"
                 }
@@ -70,5 +69,33 @@ public class RentApartmentControllerTest {
             .body("title", org.hamcrest.Matchers.equalTo("Test Apartment"))
             .body("basePrice", org.hamcrest.Matchers.equalTo(800.00f))
             .body("rooms", org.hamcrest.Matchers.equalTo(1));
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenTitleIsMissing() {
+        // given
+        String requestBody = """
+            {
+                "basePrice": 800.00,
+                "additionalCosts": 150.00,
+                "rooms": 1,
+                "address": {
+                    "street": "Second Test Street",
+                    "houseNumber": "43B",
+                    "postalCode": "12345",
+                    "city": "Test City"
+                }
+            }
+            """;
+
+        // when/then
+        given()
+            .contentType("application/json")
+            .body(requestBody)
+        .when()
+            .post("/api/apartments")
+        .then()
+            .statusCode(400)
+            .body("errors", notNullValue());
     }
 }

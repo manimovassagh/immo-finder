@@ -117,6 +117,11 @@
 			<version>5.4.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Validation for @Valid in controllers -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>

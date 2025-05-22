@@ -7,5 +7,15 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    properties:
+      hibernate:
+        '[format_sql]': true
   datasource:
     driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    '[org.springframework.web]': DEBUG
+    '[org.hibernate.validator]': DEBUG
+    '[org.hibernate.SQL]': DEBUG
+    '[com.github.manimovassagh.immo_finder]': DEBUG
