@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,8 +30,8 @@ public class Address {
     private String street;
     private String houseNumber;
 
+    @Pattern(regexp = "^\\d{5}$", message = "Postal code must be exactly 5 digits")
     private String postalCode;
     private String city;
-    @Builder.Default
-    private String country="DE";
+    private String country;
 }

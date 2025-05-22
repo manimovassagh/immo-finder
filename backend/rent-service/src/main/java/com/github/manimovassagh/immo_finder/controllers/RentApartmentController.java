@@ -35,6 +35,10 @@ public class RentApartmentController {
         // Check if address exists
         if (request.getAddress() != null) {
             Address address = request.getAddress();
+            // Set default country if null
+            if (address.getCountry() == null) {
+                address.setCountry("DE");
+            }
             boolean addressExists = rentApartmentRepository.existsByAddress(
                 address.getStreet(),
                 address.getHouseNumber(),
@@ -51,6 +55,10 @@ public class RentApartmentController {
             }
         }
 
+        Address recievedAddress = request.getAddress();
+        if(request.getAddress().getCountry() == null) {
+            recievedAddress.setCountry("DE");
+        }
 
         // Create a new RentApartment from the request
         RentApartment apartment = RentApartment.builder()
@@ -75,7 +83,7 @@ public class RentApartmentController {
                 .heatingType(request.getHeatingType())
                 .elevator(request.getElevator())
                 .barrierFree(request.getBarrierFree())
-                .address(request.getAddress())
+                .address(recievedAddress)
                 .build();
 
         // Save the apartment

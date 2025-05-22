@@ -17,34 +17,34 @@ import lombok.Data;
 
 @Data
 public class CreateApartmentRequest {
-    
+
     private UUID userId;
-    
+
     @NotBlank(message = "Title is required")
     private String title;
-    
+
     private String description;
-    
+
     @NotNull(message = "Base price is required")
     @PositiveOrZero(message = "Base price must be positive or zero")
     private BigDecimal basePrice;
-    
+
     @NotNull(message = "Additional costs are required")
     @PositiveOrZero(message = "Additional costs must be positive or zero")
     private BigDecimal additionalCosts;
-    
+
     @NotNull(message = "Number of rooms is required")
     @Positive(message = "Number of rooms must be positive")
     private Integer rooms;
-    
+
     private boolean furnished;
     private boolean hasParking;
     private boolean hasBalcony;
     private boolean hasStorage;
-    
+
     @PositiveOrZero(message = "Size must be positive or zero")
     private Double size;
-    
+
     private Integer floor;
     private Integer totalFloors;
     private LocalDate availableFrom;
@@ -55,7 +55,8 @@ public class CreateApartmentRequest {
     private HeatingType heatingType;
     private Boolean elevator;
     private Boolean barrierFree;
-    
+
     @Valid
+    @NotNull(message = "Address is required")
     private Address address;
 }

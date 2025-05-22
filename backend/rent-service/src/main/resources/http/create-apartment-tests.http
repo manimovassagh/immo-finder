@@ -26,13 +26,13 @@ Content-Type: application/json
     "propertyType": "APARTMENT",
     "petsAllowed": true,
     "heatingType": "GAS",
-  "country": "de",
+
     "elevator": true,
     "barrierFree": false,
     "address": {
         "street": "Berliner Straße",
-        "houseNumber": "1232",
-        "postalCode": "1011522",
+        "houseNumber": "123233",
+        "postalCode": "10115",
         "city": "Berlin"
     }
 }
@@ -45,7 +45,13 @@ Content-Type: application/json
     "title": "Minimal apartment listing",
     "basePrice": 800.00,
     "additionalCosts": 150.00,
-    "rooms": 1
+    "rooms": 1,
+    "address": {
+        "street": "Sample Street",
+        "houseNumber": "42",
+        "postalCode": "12345",
+        "city": "Sample City"
+    }
 }
 
 ### Create an invalid apartment (missing required fields)
@@ -66,7 +72,13 @@ Content-Type: application/json
     "basePrice": 1000.00,
     "additionalCosts": 200.00,
     "rooms": 2,
-    "propertyType": "INVALID_TYPE"
+    "propertyType": "INVALID_TYPE",
+    "address": {
+        "street": "Test Street",
+        "houseNumber": "123",
+        "postalCode": "54321",
+        "city": "Test City"
+    }
 }
 
 ### Create an apartment with invalid heating type
@@ -78,7 +90,13 @@ Content-Type: application/json
     "basePrice": 1000.00,
     "additionalCosts": 200.00,
     "rooms": 2,
-    "heatingType": "INVALID_HEATING"
+    "heatingType": "INVALID_HEATING",
+    "address": {
+        "street": "Heating Street",
+        "houseNumber": "456",
+        "postalCode": "67890",
+        "city": "Heating City"
+    }
 }
 
 ### Create an apartment with future availability date
@@ -92,7 +110,67 @@ Content-Type: application/json
     "rooms": 3,
     "availableFrom": "2024-01-01",
     "propertyType": "APARTMENT",
+    "heatingType": "CENTRAL",
+    "address": {
+        "street": "Future Street",
+        "houseNumber": "789",
+        "postalCode": "98765",
+        "city": "Future City"
+    }
+}
+
+### Create an apartment with invalid postal code (should return 400 Bad Request)
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Invalid postal code test",
+    "description": "This request should fail because the postal code is invalid",
+    "basePrice": 1000.00,
+    "additionalCosts": 200.00,
+    "rooms": 2,
+    "propertyType": "APARTMENT",
+    "heatingType": "CENTRAL",
+    "address": {
+        "street": "Test Street",
+        "houseNumber": "42",
+        "postalCode": "123456",
+        "city": "Test City"
+    }
+}
+
+### Create an apartment without address (should return 400 Bad Request)
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Missing address test",
+    "description": "This request should fail because address is required",
+    "basePrice": 1000.00,
+    "additionalCosts": 200.00,
+    "rooms": 2,
+    "propertyType": "APARTMENT",
     "heatingType": "CENTRAL"
+}
+
+### Test country default value (should set country to "DE" if not provided)
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+    "title": "Country default test",
+    "description": "This request tests that country defaults to DE when not provided",
+    "basePrice": 950.00,
+    "additionalCosts": 170.00,
+    "rooms": 2,
+    "propertyType": "APARTMENT",
+    "heatingType": "CENTRAL",
+    "address": {
+        "street": "Default Country Street",
+        "houseNumber": "42",
+        "postalCode": "12345",
+        "city": "Test City"
+    }
 }
 
 ### Test duplicate address validation (should return 409 Conflict)
