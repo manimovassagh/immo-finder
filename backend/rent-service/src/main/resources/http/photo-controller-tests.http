@@ -49,3 +49,34 @@ Content-Disposition: form-data; name="apartmentId"
 
 00000000-0000-0000-0000-000000000001
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Upload duplicate photos (should skip duplicates and return BAD_REQUEST if all are duplicates)
+# First upload
+POST {{baseUrl}}/api/photos/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="apartmentId"
+
+00000000-0000-0000-0000-000000000001
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="duplicate.jpg"
+Content-Type: image/jpeg
+
+< ../test-images/photo1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Second upload with the same filename (should be rejected)
+POST {{baseUrl}}/api/photos/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="apartmentId"
+
+00000000-0000-0000-0000-000000000001
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="duplicate.jpg"
+Content-Type: image/jpeg
+
+< ../test-images/photo1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
