@@ -40,8 +40,7 @@ public class PhotoController {
         RentApartment apartment = apartmentOpt.get();
         List<Photo> photos = new ArrayList<>();
         File dir = new File(uploadDir);
-        if (!dir.exists());
-            //dir.mkdirs();
+        if (!dir.exists()) dir.mkdirs();
         int position = apartment.getPhotos() != null ? apartment.getPhotos().size() : 0;
 
         // Create a set of existing original filenames for this apartment
