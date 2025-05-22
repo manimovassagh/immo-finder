@@ -21,7 +21,7 @@ public class RentApartmentService {
 
     private final RentApartmentRepository rentApartmentRepository;
 
-public ResponseEntity<?> RentApartmentCreate(CreateApartmentRequest request) {
+public ResponseEntity<?> createApartment(CreateApartmentRequest request) {
 
 
 
