@@ -1,4 +1,4 @@
-package com.github.manimovassagh.immo_finder.Utility;
+package com.github.manimovassagh.immo_finder.utilities;
 
 import org.springframework.stereotype.Component;
 
