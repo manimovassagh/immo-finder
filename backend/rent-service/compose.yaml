@@ -2,7 +2,7 @@
 
 services:
 
-  db:
+  rent_service_db:
     image: postgres
     restart: always
     # set shared memory limit when using docker compose
