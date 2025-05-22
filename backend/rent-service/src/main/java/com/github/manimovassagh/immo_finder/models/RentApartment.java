@@ -77,6 +77,7 @@ public class RentApartment {
     @Column(name = "has_storage", nullable = false)
     private boolean hasStorage;
 
+    @Column(name = "size", nullable = false)
     private double size;
 
     @Column(name = "floor")

@@ -25,7 +25,6 @@ CREATE TABLE rent_apartment (
     total_floors INTEGER,
     available_from DATE,
     description TEXT,
-    country VARCHAR(100),
     energy_certificate BOOLEAN,
     year_built INTEGER,
     property_type VARCHAR(50),

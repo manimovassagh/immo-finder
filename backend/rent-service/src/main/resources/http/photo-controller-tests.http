@@ -1,6 +1,6 @@
 ### Environment variables
 @host = localhost
-@port = 8082
+@port = 8080
 @baseUrl = http://{{host}}:{{port}}
 
 ### Upload photos to an apartment

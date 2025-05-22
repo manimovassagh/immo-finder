@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev # Change to test or prod depending on run context
+    active: test # Change to test or prod depending on run context
 
 server:
   port: 8080
