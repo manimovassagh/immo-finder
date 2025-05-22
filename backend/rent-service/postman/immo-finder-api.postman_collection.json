@@ -1,0 +1,178 @@
+{
+  "info": {
+    "name": "Immo Finder API",
+    "description": "API collection for the Immo Finder application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Apartments",
+      "description": "Endpoints for managing rental apartments",
+      "item": [
+        {
+          "name": "Create Apartment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Modern 2-bedroom apartment in Berlin\",\n  \"description\": \"A beautiful, modern apartment in the heart of Berlin with great public transport connections.\",\n  \"basePrice\": 1200.00,\n  \"additionalCosts\": 200.00,\n  \"rooms\": 2,\n  \"furnished\": true,\n  \"hasParking\": true,\n  \"hasBalcony\": true,\n  \"hasStorage\": false,\n  \"size\": 75.5,\n  \"floor\": 3,\n  \"totalFloors\": 5,\n  \"availableFrom\": \"2023-12-01\",\n  \"energyCertificate\": true,\n  \"yearBuilt\": 2010,\n  \"propertyType\": \"APARTMENT\",\n  \"petsAllowed\": true,\n  \"heatingType\": \"GAS\",\n  \"elevator\": true,\n  \"barrierFree\": false,\n  \"address\": {\n    \"street\": \"Berliner Straße\",\n    \"houseNumber\": \"123\",\n    \"postalCode\": \"10115\",\n    \"city\": \"Berlin\"\n  }\n}"
+            },
+            "description": "Creates a new apartment listing with the provided details."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check if the request was successful (status code 201)",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Parse the response JSON",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// Check if the response contains an ID",
+                  "pm.test(\"Response contains apartment ID\", function () {",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "});",
+                  "",
+                  "// Set the apartmentId environment variable",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set(\"apartmentId\", jsonData.id);",
+                  "    console.log(\"Apartment ID set to: \" + jsonData.id);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Apartment (Minimal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Minimal apartment listing\",\n  \"basePrice\": 800.00,\n  \"additionalCosts\": 150.00,\n  \"rooms\": 1,\n  \"address\": {\n    \"street\": \"Sample Street\",\n    \"houseNumber\": \"42\",\n    \"postalCode\": \"12345\",\n    \"city\": \"Sample City\"\n  }\n}"
+            },
+            "description": "Creates a new apartment listing with only the minimum required fields."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check if the request was successful (status code 201)",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Parse the response JSON",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// Check if the response contains an ID",
+                  "pm.test(\"Response contains apartment ID\", function () {",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "});",
+                  "",
+                  "// Set the apartmentId environment variable",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set(\"apartmentId\", jsonData.id);",
+                  "    console.log(\"Apartment ID set to: \" + jsonData.id);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Apartments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments"]
+            },
+            "description": "Retrieves a list of all available apartments."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Photos",
+      "description": "Endpoints for managing apartment photos",
+      "item": [
+        {
+          "name": "Upload Photos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/photos/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "photos", "upload"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "apartmentId",
+                  "value": "{{apartmentId}}",
+                  "type": "text",
+                  "description": "The ID of the apartment to upload photos for"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "description": "Photo files to upload (can select multiple files)"
+                }
+              ]
+            },
+            "description": "Uploads one or more photos for a specific apartment."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082",
+      "type": "string"
+    },
+    {
+      "key": "apartmentId",
+      "value": "",
+      "type": "string",
+      "description": "ID of an apartment, obtained after creating one"
+    }
+  ]
+}

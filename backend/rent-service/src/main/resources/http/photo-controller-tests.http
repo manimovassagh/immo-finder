@@ -1,0 +1,51 @@
+### Environment variables
+@host = localhost
+@port = 8082
+@baseUrl = http://{{host}}:{{port}}
+
+### Upload photos to an apartment
+# Note: This is a multipart/form-data request which requires a real client to test properly
+# This is a template for how to structure the request
+POST {{baseUrl}}/api/photos/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="apartmentId"
+
+00000000-0000-0000-0000-000000000001
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="photo1.jpg"
+Content-Type: image/jpeg
+
+< ../test-images/photo1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="photo2.jpg"
+Content-Type: image/jpeg
+
+< ../test-images/photo2.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Upload photos to a non-existent apartment (should return 404 Not Found)
+POST {{baseUrl}}/api/photos/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="apartmentId"
+
+00000000-0000-0000-0000-000000000999
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="photo1.jpg"
+Content-Type: image/jpeg
+
+< ../test-images/photo1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Upload photos with no files (should handle empty file list)
+POST {{baseUrl}}/api/photos/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="apartmentId"
+
+00000000-0000-0000-0000-000000000001
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
