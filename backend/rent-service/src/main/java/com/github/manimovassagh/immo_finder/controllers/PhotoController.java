@@ -72,7 +72,7 @@ public class PhotoController {
             Photo photo = Photo.builder()
                     .fileName(fileName)
                     .url(url)
-                    .position(position++)
+                    .position(Integer.valueOf(position++))
                     .apartment(apartment)
                     .build();
             photos.add(photo);
