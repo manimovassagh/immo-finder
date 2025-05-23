@@ -7,6 +7,7 @@
 POST {{baseUrl}}/api/apartments
 Content-Type: application/json
 
+
 {
     "title": "Modern 2-bedroom apartment in Berlin",
     "description": "A beautiful, modern apartment in the heart of Berlin with great public transport connections.",
