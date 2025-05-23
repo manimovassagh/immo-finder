@@ -11,3 +11,8 @@ spring:
     properties:
       hibernate:
         ddl-auto: update
+
+# Photo upload directory configuration
+photo:
+  upload:
+    dir: images
