@@ -1,0 +1,4 @@
+POST http://localhost:8080/realms/immo-finder/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=rent-service&client_secret=rent-service-secret&grant_type=password&username=admin&password=admin
