@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/photos")
@@ -38,58 +41,51 @@ public class PhotoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apartment not found");
         }
         RentApartment apartment = apartmentOpt.get();
-        List<Photo> photos = new ArrayList<>();
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
-        int position = apartment.getPhotos() != null ? apartment.getPhotos().size() : 0;
 
-        // Create a set of existing original filenames for this apartment
-        Set<String> existingFilenames = new HashSet<>();
-        if (apartment.getPhotos() != null) {
-            for (Photo photo : apartment.getPhotos()) {
-                // Extract original filename from the stored filename (after the UUID and underscore)
-                String storedFilename = photo.getFileName();
-                int underscoreIndex = storedFilename.indexOf('_');
-                if (underscoreIndex >= 0 && underscoreIndex < storedFilename.length() - 1) {
-                    String originalFilename = storedFilename.substring(underscoreIndex + 1);
-                    existingFilenames.add(originalFilename);
-                }
-            }
+        // Initialize photos list if null
+        if (apartment.getPhotos() == null) {
+            apartment.setPhotos(new ArrayList<>());
         }
 
-        for (MultipartFile file : files) {
-            String originalFilename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        // Create directory if it doesn't exist
+        File dir = new File(uploadDir);
+        if (!dir.exists()) dir.mkdirs();
 
-            // Skip this file if it already exists for this apartment
-            if (existingFilenames.contains(originalFilename)) {
-                continue;
-            }
+        // Check for duplicate photos
+        List<String> existingFileNames = apartment.getPhotos().stream()
+                .map(photo -> photo.getFileName().substring(photo.getFileName().indexOf('_') + 1))
+                .toList();
 
-            String fileName = UUID.randomUUID() + "_" + originalFilename;
+        List<MultipartFile> newFiles = files.stream()
+                .filter(file -> !existingFileNames.contains(StringUtils.cleanPath(file.getOriginalFilename())))
+                .toList();
+
+        // If all files are duplicates, return BAD_REQUEST
+        if (newFiles.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("No new photos to upload or all photos already exist");
+        }
+
+        // Process only new files
+        List<Photo> newPhotos = new ArrayList<>();
+        int position = apartment.getPhotos().size(); // Start position after existing photos
+
+        for (MultipartFile file : newFiles) {
+            String fileName = UUID.randomUUID() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
             Path filePath = Paths.get(uploadDir, fileName);
             Files.write(filePath, file.getBytes());
             String url = "/" + uploadDir + "/" + fileName;
             Photo photo = Photo.builder()
                     .fileName(fileName)
                     .url(url)
-                    .position(Integer.valueOf(position++))
+                    .position(position++)
                     .apartment(apartment)
                     .build();
-            photos.add(photo);
-
-            // Add to set of existing filenames to prevent duplicates within the same upload batch
-            existingFilenames.add(originalFilename);
+            newPhotos.add(photo);
         }
 
-        if (photos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No new photos to upload or all photos already exist");
-        }
-
-        if (apartment.getPhotos() == null) {
-            apartment.setPhotos(new ArrayList<>());
-        }
-        apartment.getPhotos().addAll(photos);
-        RentApartment savedApartment = rentApartmentRepository.save(apartment);
-        return ResponseEntity.ok(savedApartment.getPhotos());
+        apartment.getPhotos().addAll(newPhotos);
+        rentApartmentRepository.save(apartment);
+        return ResponseEntity.ok(newPhotos);
     }
 }
